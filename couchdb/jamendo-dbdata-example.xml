@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ! Excerpted from "Seven Databases in Seven Weeks",
+ ! published by The Pragmatic Bookshelf.
+ ! Copyrights apply to this code. It may not be used to create training material, 
+ ! courses, books, articles, and the like. Contact us if you are in doubt.
+ ! We make no guarantees that this code is fit for any purpose. 
+ ! Visit http://www.pragmaticprogrammer.com/titles/rwdata for more book information.
+-->
+<JamendoData epoch="1227647795" documentation="http://developer.jamendo.com/en/wiki/DatabaseDumps" type="artistalbumtrack">
+
+<Artists>
+
+
+  <artist>
+    <id>22</id>                                          <!-- internal jamendo ID -->
+    <name>Lonah</name>                                   <!-- display name -->
+    <url>http://www.jamendo.com/en/artist/lonah</url>    <!-- jamendo url to artist -->
+    <image>http://imgjam.com/artists/l/lonah.jpg</image> <!-- artist image url -->
+    <mbgid>79239441-bfd5-4981-a70c-55c3f15c1287</mbgid>  <!-- musicbrainz ID (may be blank) -->
+    <location>                                           <!-- structure about the main location of the artist -->
+      <country>USA</country>                             <!-- ISO code of the country -->
+      <state>CA</state>                                  <!-- ISO Country subdivision (states in the US, "departments" in France,  ...) -->
+      <city>San Francisco</city>
+      <latitude>-0.229498</latitude>
+      <longitude>-78.5243</longitude>
+    </location>
+
+
+    <Albums>
+      <album>
+        <id>116</id>                                     <!-- internal jamendo ID -->   
+        <name>Pieces</name>                              <!-- display name -->
+        <url>http://www.jamendo.com/album/116</url>    <!-- jamendo url to album -->
+        <id3genre>43</id3genre>
+        <mbgid></mbgid>                                  <!-- musicbrainz ID (may be blank) -->
+        <license_artwork>http://creativecommons.org/licenses/by-sa/3.0</license_artwork>
+        <releasedate>2008-02-25T15:37:58+01:00</releasedate>            <!-- ISO-formatted date -->
+        <filename>Lonah - En chantant</filename>         <!-- Usual directory name without extension -->
+       
+
+        <Tracks>
+          <track>
+            <id>234233</id>
+            <name>En chantant!</id>
+            <filename>01 - Lonah - En chantant</filename> <!-- Usual filename without extension -->
+            <mbgid></mbgid>                               <!-- musicbrainz ID (may be blank) -->
+            <numalbum>1</numalbum>                        <!-- Track number in the album. starts at 1 -->
+            <id3genre>13</id3genre>                       <!-- Standard ID3 genre, 0 to 79 (cf below in Misc.) -->
+            <license>http://creativecommons.org/licenses/by-sa/3.0/</license>
+
+
+            <Tags>
+              <tag>
+                <idstr>rock</idstr>
+                <weight>0.46</weight>                <!-- weight always between 0 and 1 -->
+              </tag>
+
+              [...]
+
+            </Tags>
+          </track>
+
+          [...]
+
+        <Tracks>
+      </album>
+
+      [...]
+
+    </Albums>
+  </artist>
+
+  [...]
+
+</Artists>
+
+</JamendoData>

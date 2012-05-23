@@ -1,0 +1,31 @@
+<!--
+ ! Excerpted from "Seven Databases in Seven Weeks",
+ ! published by The Pragmatic Bookshelf.
+ ! Copyrights apply to this code. It may not be used to create training material, 
+ ! courses, books, articles, and the like. Contact us if you are in doubt.
+ ! We make no guarantees that this code is fit for any purpose. 
+ ! Visit http://www.pragmaticprogrammer.com/titles/rwdata for more book information.
+-->
+<html>
+  <head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
+  <script>
+  $(function() {
+    $("#band").autocomplete({ source: "/search" });
+  });
+  </script>
+  </head>
+  <body>
+    <form action="/band">
+      <h3>{{message}}</h3>
+      <label for="band">Band Name:</label>
+      <input id="band" name="name" value="{{band}}">
+      <input type="submit">
+    </form>
+    <div id="main">
+    [[YIELD]]
+    </div>
+  </body>
+</html>
