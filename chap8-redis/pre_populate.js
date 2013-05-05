@@ -46,7 +46,7 @@ function trackLineCount() {
  */
 function populateRedis() {
   csv().
-  fromPath( tsvFileName, { delimiter: '\t', quote: '' }).
+  from.path( tsvFileName, { delimiter: '\t', quote: '' }).
   on('data', function(data, index) {
     var
       artist = data[2],
