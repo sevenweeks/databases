@@ -19,8 +19,7 @@ var
   http = require('http'),
   redis = require('redis'),
 
-  // database clients
-  couchClient = http.createClient(5984, 'localhost'),
+  // database client
   redisClient = redis.createClient(6379);
 
 /**
@@ -62,11 +61,14 @@ function trackLineCount( increment ) {
  */
 function postDoc( url, docsString, count ) {
 
-  var request = couchClient.request(
-    'POST',
-    url,
-    { 'Content-Type' : 'application/json' });
-  request.end( docsString );
+  var request = http.request(
+    { hostname : 'localhost',
+      port: 5984,
+      path: url,
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'}
+    });
 
   request.on('response', function(response) {
     if(response.statusCode == 201)
@@ -75,6 +77,8 @@ function postDoc( url, docsString, count ) {
   on('error', function(e) {
     console.log('postDoc Got error: ' + e.message);
   });
+  request.write(docsString)
+  request.end(); 
 };
 
 /*
@@ -95,7 +99,11 @@ function postDoc( url, docsString, count ) {
 function populateBands() {
 
   // First, create the couch database
-  couchClient.request('PUT', couchDBpath).end();
+  http.request(
+    { hostname : 'localhost',
+      port: 5984,
+      path: couchDBpath,
+      method: 'PUT'}).end(); 
 
   redisClient.keys('band:*', function(error, bandKeys) {
     totalBands = bandKeys.length;
