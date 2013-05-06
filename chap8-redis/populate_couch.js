@@ -112,7 +112,6 @@ function populateBands() {
       bandsBatch = [];
 	  
     bandKeys.forEach(function(bandKey) {
-      console.log(bandKey);
       // substring of 'band:'.length gives us the band name
       var bandName = bandKey.substring(5);
       redisClient.smembers(bandKey, function(error, artists) {
