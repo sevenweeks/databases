@@ -47,15 +47,16 @@ function trackLineCount() {
 function populateRedis() {
   csv().
   from.path( tsvFileName, { delimiter: '\t', quote: '' }).
-  on('data', function(data, index) {
+  on('record', function(record, index) {
     var
-      artist = data[2],
-      band = data[3],
-      roles = buildRoles(data[4]);
+      artist = record[2],
+      band = record[3],
+      roles = buildRoles(record[4]);
     if( band === '' || artist === '' ) {
       trackLineCount();
       return true;
-    }
+   }
+    //console.log('#'+index+' '+JSON.stringify(record));
     redis_client.sadd('band:' + band, artist);
     roles.forEach(function(role) {
       redis_client.sadd('artist:' + band + ':' + artist, role);
