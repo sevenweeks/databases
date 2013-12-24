@@ -9,7 +9,7 @@
 Gremlin.defineStep( 'friendsuggest',
   [Vertex, Pipe],
   {
-    _().sideEffect{start = it}.both('friends').
-    except([start]).out('likes').dedup
+    _().both('friends').
+    except([_()]).out('likes').dedup
   }
 )
