@@ -9,8 +9,9 @@
 
 require 'time'
 
-import 'org.apache.hadoop.hbase.client.HTable'
 import 'org.apache.hadoop.hbase.client.Put'
+import 'org.apache.hadoop.hbase.client.ConnectionFactory'
+import 'org.apache.hadoop.hbase.TableName'
 import 'javax.xml.stream.XMLStreamConstants'
 
 def jbytes( *args )
@@ -24,8 +25,10 @@ document = nil # (1)
 buffer = nil
 count = 0
 
-table = HTable.new( @hbase.configuration, 'wiki' )
-table.setAutoFlush( false ) # (2)
+connection = ConnectionFactory.createConnection()
+
+table = connection.getBufferedMutator( TableName.valueOf( "wiki" ) ) # (2)
+
 
 while reader.has_next
   type = reader.next
@@ -51,13 +54,13 @@ while reader.has_next
       ts = ( Time.parse document['timestamp'] ).to_i
       
       p = Put.new( key, ts )
-      p.add( *jbytes( "text", "", document['text'] ) )
-      p.add( *jbytes( "revision", "author", document['username'] ) )
-      p.add( *jbytes( "revision", "comment", document['comment'] ) )
-      table.put( p )
+      p.addColumn( *jbytes( "text", "", document['text'] ) )
+      p.addColumn( *jbytes( "revision", "author", document['username'] ) )
+      p.addColumn( *jbytes( "revision", "comment", document['comment'] ) )
+      table.mutate( p )
       
       count += 1
-      table.flushCommits() if count % 10 == 0
+      table.flush() if count % 10 == 0
       if count % 500 == 0
         puts "#{count} records inserted (#{document['title']})"
       end
@@ -65,7 +68,7 @@ while reader.has_next
   end
 end
 
-table.flushCommits()
+table.flush()
 exit
 
 
