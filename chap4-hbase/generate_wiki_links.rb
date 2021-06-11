@@ -7,18 +7,21 @@
 # Visit http://www.pragmaticprogrammer.com/titles/rwdata for more book information.
 #---
 
-import 'org.apache.hadoop.hbase.client.HTable'
+import 'org.apache.hadoop.hbase.client.ConnectionFactory'
+import 'org.apache.hadoop.hbase.TableName'
 import 'org.apache.hadoop.hbase.client.Put'
 import 'org.apache.hadoop.hbase.client.Scan'
+import 'org.apache.hadoop.hbase.client.Durability'
 import 'org.apache.hadoop.hbase.util.Bytes'
 
 def jbytes( *args )
   return args.map { |arg| arg.to_s.to_java_bytes }
 end
 
-wiki_table = HTable.new( @hbase.configuration, 'wiki' )
-links_table = HTable.new( @hbase.configuration, 'links' )
-links_table.setAutoFlush( false )
+connection = ConnectionFactory.createConnection()
+
+wiki_table = connection.getTable( TableName.valueOf( "wiki" ) )
+links_table = connection.getBufferedMutator( TableName.valueOf( "links" ) )
 
 scanner = wiki_table.getScanner( Scan.new ) # (1)
 
@@ -35,29 +38,33 @@ while (result = scanner.next())
     text.scan(linkpattern) do |target, label| # (3)
       unless put_to
         put_to = Put.new( *jbytes( title ) )
-        put_to.setWriteToWAL( false )
+        put_to.setDurability(Durability::SKIP_WAL)
       end
       
       target.strip!
       target.capitalize!
       
+      if target.length == 0
+        next
+      end
+      
       label = '' unless label
       label.strip!
       
-      put_to.add( *jbytes( "to", target, label ) )
+      put_to.addColumn( *jbytes( "to", target, label ) )
       put_from = Put.new( *jbytes( target ) )
-      put_from.add( *jbytes( "from", title, label ) )
-      put_from.setWriteToWAL( false )
-      links_table.put( put_from ) # (4)
+      put_from.addColumn( *jbytes( "from", title, label ) )
+      put_to.setDurability(Durability::SKIP_WAL)
+      links_table.mutate( put_from ) # (4)
     end
-    links_table.put( put_to ) if put_to # (5)
-    links_table.flushCommits()
-	
+    links_table.mutate( put_to ) if put_to and not put_to.isEmpty # (5)
+    links_table.flush()
+    
   end
   count += 1
   puts "#{count} pages processed (#{title})" if count % 500 == 0
 
 end
-links_table.flushCommits()
+links_table.flush()
 exit
 

@@ -6,20 +6,22 @@
 # We make no guarantees that this code is fit for any purpose. 
 # Visit http://www.pragmaticprogrammer.com/titles/rwdata for more book information.
 #---
-import 'org.apache.hadoop.hbase.client.HTable'
 import 'org.apache.hadoop.hbase.client.Put'
+import 'org.apache.hadoop.hbase.client.ConnectionFactory'
+import 'org.apache.hadoop.hbase.TableName'
 
 def jbytes( *args )
   args.map { |arg| arg.to_s.to_java_bytes }
 end
 
-table = HTable.new( @hbase.configuration, "wiki" )
+connection = ConnectionFactory.createConnection()
+
+table = connection.getTable( TableName.valueOf( "wiki" ) )
 
 p = Put.new( *jbytes( "Home" ) )
 
-p.add( *jbytes( "text", "", "Hello world" ) )
-p.add( *jbytes( "revision", "author", "jimbo" ) )
-p.add( *jbytes( "revision", "comment", "my first edit" ) )
+p.addColumn( *jbytes( "text", "", "Hello world" ) )
+p.addColumn( *jbytes( "revision", "author", "jimbo" ) )
+p.addColumn( *jbytes( "revision", "comment", "my first edit" ) )
 
 table.put( p )
-
